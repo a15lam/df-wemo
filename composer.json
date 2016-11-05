@@ -1,0 +1,45 @@
+{
+  "name":        "a15lam/df-wemo",
+  "description": "A DreamFactory service for controlling Belkin Wemo devices",
+  "keywords":    [
+    "dreamfactory",
+    "dsp",
+    "rest",
+    "iot",
+    "belkin",
+    "wemo",
+    "light",
+    "switch",
+    "bulb",
+    "link",
+    "php-wemo"
+  ],
+  "homepage":    "https://github.com/a15lam/df-wemo",
+  "license":     "Apache-2.0",
+  "authors":     [
+    {
+      "name":  "Arif Islam",
+      "email": "areef.islam@gmail.com"
+    }
+  ],
+  "support":     {
+    "email":  "areef.islam@gmail.com",
+    "source": "https://github.com/a15lam/df-wemo",
+    "issues": "https://github.com/a15lam/df-wemo/issues",
+    "wiki":   "https://github.com/a15lam/df-wemo/wiki"
+  },
+  "require":     {
+    "dreamfactory/df-core": "~0.5.0",
+    "a15lam/php-wemo": "dev-develop as dev-master"
+  },
+  "autoload":    {
+    "psr-4": {
+      "DreamFactory\\Core\\Wemo\\": "src/"
+    }
+  },
+  "extra":       {
+    "branch-alias": {
+      "dev-develop": "0.1.x-dev"
+    }
+  }
+}
