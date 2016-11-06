@@ -5,9 +5,9 @@ namespace DreamFactory\Core\Wemo\Services;
 use a15lam\PhpWemo\Contracts\DeviceInterface;
 use a15lam\PhpWemo\Discovery;
 use DreamFactory\Core\Exceptions\BadRequestException;
+use DreamFactory\Core\Exceptions\InternalServerErrorException;
 use DreamFactory\Core\Exceptions\NotFoundException;
 use DreamFactory\Core\Services\BaseRestService;
-use DreamFactory\Core\Utility\ResourcesWrapper;
 use DreamFactory\Core\Utility\Session;
 
 class Wemo extends BaseRestService
@@ -32,7 +32,7 @@ class Wemo extends BaseRestService
             $device = $this->resource;
             $state = array_get($this->resourceArray, 1);
             $state = (null === $state) ? $state : strtolower($state);
-            $list = $this->findDevices(false);
+            $list = $this->findDevices(false, true);
 
             if (in_array($device, $list)) {
                 /** @var DeviceInterface $d */
@@ -65,9 +65,10 @@ class Wemo extends BaseRestService
             }
         } else {
             $refresh = $this->request->getParameterAsBool('refresh');
-            $list = $this->findDevices($refresh);
+            $asList = $this->request->getParameterAsBool('as_list');
+            $list = $this->findDevices($refresh, $asList);
 
-            return ResourcesWrapper::wrapResources($list);
+            return ['device' => $list];
         }
     }
 
@@ -75,10 +76,11 @@ class Wemo extends BaseRestService
      * Searches for devices in the network
      *
      * @param bool $refresh
+     * @param bool $asList
      *
      * @return array
      */
-    protected function findDevices($refresh = false)
+    protected function findDevices($refresh = false, $asList = false)
     {
         $list = [];
         Discovery::$deviceFile = $this->deviceFile;
@@ -88,19 +90,52 @@ class Wemo extends BaseRestService
             if ('Bridge' === $model) {
                 $bds = array_get($device, 'device');
                 foreach ($bds as $bd) {
-                    $id = array_get($bd, 'id');;
-                    if (!isset($list[$id])) {
-                        $list[] = $id;
+                    if ($asList) {
+                        $list[] = array_get($bd, 'id');
+                    } else {
+                        $list[] = $this->getDeviceInfo($bd);
                     }
                 }
             } else {
-                $id = array_get($device, 'id');
-                if (!isset($list[$id])) {
-                    $list[] = $id;
+                if ($asList) {
+                    $list[] = array_get($device, 'id');
+                } else {
+                    $list[] = $this->getDeviceInfo($device);
                 }
             }
         }
 
         return $list;
+    }
+
+    /**
+     * Gets additional device info.
+     *
+     * @param $info
+     *
+     * @return array
+     * @throws \DreamFactory\Core\Exceptions\InternalServerErrorException
+     */
+    protected function getDeviceInfo($info)
+    {
+        $id = array_get($info, 'id');
+        $device = Discovery::getDeviceById($id);
+        $details = $this->request->getParameterAsBool('details');
+
+        if ($device instanceof DeviceInterface) {
+            $dimmable = $device->isDimmable();
+            if (true === $details) {
+                $info['dimmable'] = $dimmable;
+
+                return $info;
+            } else {
+                return [
+                    'id'       => $id,
+                    'dimmable' => $dimmable
+                ];
+            }
+        } else {
+            throw new InternalServerErrorException('Unsupported device [' . $id . ']');
+        }
     }
 }
