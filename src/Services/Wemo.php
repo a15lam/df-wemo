@@ -52,7 +52,7 @@ class Wemo extends BaseRestService
 
                     return ['success' => true];
                 } else {
-                    $state = $d->state();
+                    $state = (int) $d->state();
                     $dimLevel = 'N/A';
                     if ($d->isDimmable()) {
                         $dimLevel = $d->dimState();
@@ -119,21 +119,31 @@ class Wemo extends BaseRestService
     protected function getDeviceInfo($info)
     {
         $id = array_get($info, 'id');
+        /** @var DeviceInterface $device */
         $device = Discovery::getDeviceById($id);
         $details = $this->request->getParameterAsBool('details');
+        $state = $this->request->getParameterAsBool('state');
 
         if ($device instanceof DeviceInterface) {
             $dimmable = $device->isDimmable();
             if (true === $details) {
                 $info['dimmable'] = $dimmable;
-
-                return $info;
+                $out = $info;
             } else {
-                return [
+                $out = [
                     'id'       => $id,
                     'dimmable' => $dimmable
                 ];
             }
+
+            if(true === $state){
+                $out['state'] = (int) $device->state();
+                if($dimmable){
+                    $out['dim_level'] = $device->dimState();
+                }
+            }
+
+            return $out;
         } else {
             throw new InternalServerErrorException('Unsupported device [' . $id . ']');
         }
