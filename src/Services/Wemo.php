@@ -49,17 +49,15 @@ class Wemo extends BaseRestService
                         $dimLevel = (int)array_get($this->resourceArray, 2, 50);
                         $d->dim($dimLevel);
                     }
-
-                    return ['success' => true];
-                } else {
-                    $state = (int) $d->state();
-                    $dimLevel = 'N/A';
-                    if ($d->isDimmable()) {
-                        $dimLevel = $d->dimState();
-                    }
-
-                    return ['state' => $state, 'dim_level' => $dimLevel];
                 }
+
+                $state = (int) $d->state();
+                $dimLevel = 'N/A';
+                if ($d->isDimmable()) {
+                    $dimLevel = $d->dimState();
+                }
+
+                return ['state' => $state, 'dim_level' => $dimLevel];
             } else {
                 throw new NotFoundException('Device not found with id [' . $device . ']');
             }
