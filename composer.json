@@ -29,7 +29,7 @@
     "wiki":   "https://github.com/a15lam/df-wemo/wiki"
   },
   "require":     {
-    "dreamfactory/df-core": "~0.5.0",
+    "dreamfactory/df-core": "~0.6.0",
     "a15lam/php-wemo": "dev-develop as dev-master"
   },
   "autoload":    {
