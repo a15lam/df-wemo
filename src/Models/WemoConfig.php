@@ -1,6 +1,6 @@
 <?php
 
-namespace DreamFactory\Core\Wemo\Models;
+namespace a15lam\Wemo\Models;
 
 use DreamFactory\Core\Models\BaseServiceConfigModel;
 

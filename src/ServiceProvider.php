@@ -1,12 +1,12 @@
 <?php
 
-namespace DreamFactory\Core\Wemo;
+namespace a15lam\Wemo;
 
 use DreamFactory\Core\Components\ServiceDocBuilder;
 use DreamFactory\Core\Services\ServiceManager;
 use DreamFactory\Core\Services\ServiceType;
-use DreamFactory\Core\Wemo\Models\WemoConfig;
-use DreamFactory\Core\Wemo\Services\Wemo;
+use a15lam\Wemo\Models\WemoConfig;
+use a15lam\Wemo\Services\Wemo;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {

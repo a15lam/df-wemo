@@ -1,6 +1,6 @@
 <?php
 
-namespace DreamFactory\Core\Wemo\Services;
+namespace a15lam\Wemo\Services;
 
 use a15lam\PhpWemo\Contracts\DeviceInterface;
 use a15lam\PhpWemo\Discovery;
