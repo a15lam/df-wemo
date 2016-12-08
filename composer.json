@@ -34,7 +34,7 @@
   },
   "autoload":    {
     "psr-4": {
-      "DreamFactory\\Core\\Wemo\\": "src/"
+      "a15lam\\Wemo\\": "src/"
     }
   },
   "extra":       {
