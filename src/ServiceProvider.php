@@ -7,7 +7,6 @@ use DreamFactory\Core\Services\ServiceManager;
 use DreamFactory\Core\Services\ServiceType;
 use DreamFactory\Core\Wemo\Models\WemoConfig;
 use DreamFactory\Core\Wemo\Services\Wemo;
-use DreamFactory\Core\Enums\ServiceTypeGroups;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -22,7 +21,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                     'name'            => 'wemo',
                     'label'           => 'Wemo',
                     'description'     => 'Belkin Wemo service.',
-                    'group'           => ServiceTypeGroups::IOT,
+                    'group'           => 'IOT',
                     'config_handler'  => WemoConfig::class,
                     'default_api_doc' => function ($service){
                         return $this->buildServiceDoc($service->id, Wemo::getApiDocInfo($service));
