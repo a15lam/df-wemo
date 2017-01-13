@@ -3,7 +3,7 @@
 namespace a15lam\Wemo\Services;
 
 use a15lam\PhpWemo\Contracts\DeviceInterface;
-use a15lam\PhpWemo\Discovery;
+use a15lam\PhpIot\Discovery;
 use DreamFactory\Core\Exceptions\BadRequestException;
 use DreamFactory\Core\Exceptions\InternalServerErrorException;
 use DreamFactory\Core\Exceptions\NotFoundException;
