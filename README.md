@@ -1,5 +1,5 @@
 # df-wemo
-A DreamFactory service to control Belkin Wemo devices. It also supports Sonoff devices with custom firmware found [here](https://github.com/a15lam/sonoff/blob/master/arduino/SSDP_and_webserver/SSDP_and_webserver.ino)
+A DreamFactory service to control [Belkin Wemo](http://www.belkin.com/us/Products/c/home-automation/) devices. It also supports Sonoff devices with custom firmware found [here](https://github.com/a15lam/sonoff/blob/master/arduino/SSDP_and_webserver/SSDP_and_webserver.ino).
 
 # Installation
 In your DreamFactory installation root run 

@@ -8,6 +8,7 @@ use DreamFactory\Core\Models\Service;
 use DreamFactory\Core\Services\ServiceManager;
 use DreamFactory\Core\Services\ServiceType;
 use a15lam\Wemo\Services\Wemo;
+use Cache;
 
 class ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
@@ -37,7 +38,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
         // Auto seed the service as it doesn't requir any configuration.
         // Default service name is 'wemo'. You can change this using
         // WEMO_SERVICE_NAME Environment option.
-        if (false === \Cache::get('wemo-seeded', false)) {
+        if (false === Cache::get('wemo-seeded', false)) {
             $serviceName = env('WEMO_SERVICE_NAME', 'wemo');
             $model = Service::whereName($serviceName)->whereType('wemo')->get()->first();
 
@@ -54,7 +55,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                 $model->mutable = 0;
                 $model->update();
                 BaseModel::reguard();
-                \Cache::forever('wemo-seeded', true);
+                Cache::forever('wemo-seeded', true);
             }
         }
     }
