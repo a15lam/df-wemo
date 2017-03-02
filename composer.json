@@ -29,8 +29,8 @@
     "wiki":   "https://github.com/a15lam/df-wemo/wiki"
   },
   "require":     {
-    "dreamfactory/df-core": "~0.8.0",
-    "a15lam/php-iot": "dev-master"
+    "dreamfactory/df-core": "~0.7.0",
+    "a15lam/php-iot": "~0.1.0"
   },
   "autoload":    {
     "psr-4": {
