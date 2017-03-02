@@ -8,22 +8,10 @@ use DreamFactory\Core\Exceptions\BadRequestException;
 use DreamFactory\Core\Exceptions\InternalServerErrorException;
 use DreamFactory\Core\Exceptions\NotFoundException;
 use DreamFactory\Core\Services\BaseRestService;
-use DreamFactory\Core\Utility\Session;
 
 class Wemo extends BaseRestService
 {
-    /** @var string|null File path where device info is cached. */
-    protected $deviceFile = null;
-
-    /** {@inheritdoc} */
-    public function __construct(array $settings)
-    {
-        parent::__construct($settings);
-        $config = array_get($settings, 'config');
-        Session::replaceLookups($config, true);
-
-        $this->deviceFile = array_get($config, 'device_file_path');
-    }
+    const DEVICE_CACHE_FILE = 'storage/app/wemo-device.json';
 
     /** {@inheritdoc} */
     protected function handleGET()
@@ -32,9 +20,8 @@ class Wemo extends BaseRestService
             $device = $this->resource;
             $state = array_get($this->resourceArray, 1);
             $state = (null === $state) ? $state : strtolower($state);
-            $list = $this->findDevices(false, true);
 
-            if (in_array($device, $list)) {
+            try {
                 /** @var DeviceInterface $d */
                 $d = Discovery::getDeviceById($device);
                 if (!empty($state)) {
@@ -51,15 +38,15 @@ class Wemo extends BaseRestService
                     }
                 }
 
-                $state = (int) $d->state();
+                $state = (int)$d->state();
                 $dimLevel = 'N/A';
                 if ($d->isDimmable()) {
                     $dimLevel = $d->dimState();
                 }
 
                 return ['state' => $state, 'dim_level' => $dimLevel];
-            } else {
-                throw new NotFoundException('Device not found with id [' . $device . ']');
+            } catch (\Exception $e) {
+                throw new NotFoundException('Device not found with id [' . $device . ']. ' . $e->getMessage());
             }
         } else {
             $refresh = $this->request->getParameterAsBool('refresh');
@@ -81,7 +68,7 @@ class Wemo extends BaseRestService
     protected function findDevices($refresh = false, $asList = false)
     {
         $list = [];
-        Discovery::$deviceFile = $this->deviceFile;
+        Discovery::$deviceFile = base_path(static::DEVICE_CACHE_FILE);
         $devices = Discovery::find($refresh);
         foreach ($devices as $device) {
             $model = array_get($device, 'modelName');
@@ -134,9 +121,9 @@ class Wemo extends BaseRestService
                 ];
             }
 
-            if(true === $state){
-                $out['state'] = (int) $device->state();
-                if($dimmable){
+            if (true === $state) {
+                $out['state'] = (int)$device->state();
+                if ($dimmable) {
                     $out['dim_level'] = $device->dimState();
                 }
             }
