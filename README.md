@@ -6,7 +6,7 @@ In your DreamFactory installation root run
 
     composer require a15lam/df-wemo
     
-Add the following to the list of <code>providers</code> in config/app.php file.
+Add the following *AT THE END* of the list of <code>providers</code> in config/app.php file.
 
     a15lam\Wemo\ServiceProvider::class
     
