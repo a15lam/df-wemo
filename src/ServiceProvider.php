@@ -50,7 +50,7 @@ class ServiceProvider extends \Illuminate\Support\ServiceProvider
                     'name'            => 'wemo',
                     'label'           => 'Wemo',
                     'description'     => 'Belkin Wemo service.',
-                    'group'           => 'IOT',
+                    'group'           => 'IoT',
                     'config_handler'  => null,
 //                    'default_api_doc' => function ($service){
 //                        return $this->buildServiceDoc($service->id, Wemo::getApiDocInfo($service));
