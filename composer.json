@@ -40,6 +40,11 @@
   "extra":       {
     "branch-alias": {
       "dev-develop": "0.1.x-dev"
+    },
+    "laravel": {
+      "providers": [
+        "a15lam\\Wemo\\ServiceProvider"
+      ]
     }
   }
 }
