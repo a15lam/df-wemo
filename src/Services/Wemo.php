@@ -4,6 +4,7 @@ namespace a15lam\Wemo\Services;
 
 use a15lam\PhpWemo\Contracts\DeviceInterface;
 use a15lam\PhpIot\Discovery;
+use DreamFactory\Core\Enums\ApiOptions;
 use DreamFactory\Core\Exceptions\BadRequestException;
 use DreamFactory\Core\Exceptions\InternalServerErrorException;
 use DreamFactory\Core\Exceptions\NotFoundException;
@@ -57,10 +58,16 @@ class Wemo extends BaseRestService
             }
         } else {
             $refresh = $this->request->getParameterAsBool('refresh');
-            $asList = $this->request->getParameterAsBool('as_list');
-            $list = $this->findDevices($refresh, $asList);
+            $asList = $this->request->getParameterAsBool(ApiOptions::AS_LIST);
+            $asAL = $this->request->getParameterAsBool(ApiOptions::AS_ACCESS_LIST);
 
-            return ['device' => $list];
+            if ($asAL) {
+                return ['resource' => ['', '*']];
+            } else {
+                $list = $this->findDevices($refresh, $asList);
+
+                return ['device' => $list];
+            }
         }
     }
 
