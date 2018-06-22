@@ -4,10 +4,13 @@ namespace a15lam\Wemo\Services;
 
 use a15lam\PhpWemo\Contracts\DeviceInterface;
 use a15lam\PhpIot\Discovery;
+use DreamFactory\Core\Contracts\ServiceResponseInterface;
 use DreamFactory\Core\Enums\ApiOptions;
+use DreamFactory\Core\Enums\Verbs;
 use DreamFactory\Core\Exceptions\BadRequestException;
 use DreamFactory\Core\Exceptions\InternalServerErrorException;
 use DreamFactory\Core\Exceptions\NotFoundException;
+use DreamFactory\Core\Facades\ServiceManager;
 use DreamFactory\Core\Services\BaseRestService;
 
 class Wemo extends BaseRestService
@@ -138,6 +141,17 @@ class Wemo extends BaseRestService
                 $out['state'] = (int)$device->state();
                 if ($dimmable) {
                     $out['dim_level'] = $device->dimState();
+                }
+                // Special handling of garage door state
+                // Fetching state from alarm.com
+                if($out['id'] === 'garage'){
+                    /** @var ServiceResponseInterface $result */
+                    $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7');
+                    if($result->getStatusCode() === 200){
+                        $content = $result->getContent();
+                        $rawState = ($content['sensor'])->{'state'};
+                        $out['state'] = ($rawState === 1)? 0 : 1;
+                    }
                 }
             }
 
