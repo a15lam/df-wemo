@@ -164,6 +164,7 @@ class Wemo extends BaseRestService
         if(!empty($targetState)){
             return ($targetState === 'on')? 1 : 0;
         }
+        /** @var ServiceResponseInterface $result */
         $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7', [], [], null, null, false);
         if($result->getStatusCode() === 200){
             $content = $result->getContent();
