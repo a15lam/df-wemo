@@ -146,7 +146,7 @@ class Wemo extends BaseRestService
                 // Fetching state from alarm.com
                 if($out['id'] === 'garage'){
                     /** @var ServiceResponseInterface $result */
-                    $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7');
+                    $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7', [], [], null, null, false);
                     if($result->getStatusCode() === 200){
                         $content = $result->getContent();
                         $rawState = ($content['sensor'])->{'state'};
