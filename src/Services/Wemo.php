@@ -49,7 +49,11 @@ class Wemo extends BaseRestService
                     }
                 }
 
-                $state = (int)$d->state();
+                if(strtolower($device) === 'garage'){
+                    $state = static::getGarageDoorState($state);
+                } else {
+                    $state = (int)$d->state();
+                }
                 $dimLevel = 'N/A';
                 if ($d->isDimmable()) {
                     $dimLevel = $d->dimState();
@@ -145,19 +149,26 @@ class Wemo extends BaseRestService
                 // Special handling of garage door state
                 // Fetching state from alarm.com
                 if($out['id'] === 'garage'){
-                    /** @var ServiceResponseInterface $result */
-                    $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7', [], [], null, null, false);
-                    if($result->getStatusCode() === 200){
-                        $content = $result->getContent();
-                        $rawState = ($content['sensor'])->{'state'};
-                        $out['state'] = ($rawState === 1)? 0 : 1;
-                    }
+                    $out['state'] = static::getGarageDoorState();
                 }
             }
 
             return $out;
         } else {
             throw new InternalServerErrorException('Unsupported device [' . $id . ']');
+        }
+    }
+
+    protected static function getGarageDoorState($targetState=null)
+    {
+        if(!empty($targetState)){
+            return ($targetState === 'on')? 1 : 0;
+        }
+        $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7', [], [], null, null, false);
+        if($result->getStatusCode() === 200){
+            $content = $result->getContent();
+            $rawState = ($content['sensor'])->{'state'};
+            return ($rawState === 1)? 0 : 1;
         }
     }
 
