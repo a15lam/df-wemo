@@ -168,7 +168,7 @@ class Wemo extends BaseRestService
         $result = ServiceManager::handleRequest('alarm', Verbs::GET, '92289759-7', [], [], null, null, false);
         if($result->getStatusCode() === 200){
             $content = $result->getContent();
-            $rawState = ($content['sensor'])->{'state'};
+            $rawState = ($content['sensor'])->{'attributes'}->{'state'};
             return ($rawState === 1)? 0 : 1;
         }
     }
